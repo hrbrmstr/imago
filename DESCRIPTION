@@ -1,24 +1,28 @@
 Package: imago
 Type: Package
-Title: imago title goes here otherwise CRAN checks fail
+Title: Hacky World Map GeoJSON Based on the Imago Projection
 Version: 0.1.0
 Date: 2020-03-20
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
-           comment = c(ORCID = "0000-0001-5670-2640"))
+           comment = c(ORCID = "0000-0001-5670-2640")),
+    person("Justin", "Kunimune", role = "aut", 
+           comment = "Imago projection")
   )
 Maintainer: Bob Rudis <bob@rud.is>
-Description: A good description goes here otherwise CRAN checks fail.
+Description: In 2017, Justin Kunimune reverse engineerd 
+    (<https://kunimune.home.blog/2017/11/23/the-secrets-of-the-authagraph-revealed/>) 
+    and open sourced the proprietary AuthaGraph (http://www.authagraph.com/top/?lang=en) 
+    projection. Tools are provided to use this map in R for making
+    global choropleth charts.
 URL: https://git.rud.is/hrbrmstr/imago
 BugReports: https://git.rud.is/hrbrmstr/imago/issues
 Encoding: UTF-8
-License: AGPL
+License: MIT + file LICENSE
 Suggests: 
     covr, tinytest
 Depends: 
     R (>= 3.2.0)
-Imports: 
-    httr,
-    jsonlite
+Imports: sf
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2

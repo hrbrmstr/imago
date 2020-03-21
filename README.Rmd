@@ -29,6 +29,10 @@ hrbrpkghelpr::describe_ingredients()
 hrbrpkghelpr::install_block()
 ```
 
+## NOTE 
+
+This is really only suitable for choropleths. You're not going to be able to plot lon/lat on this since it was a hacky conversion from an SVG file to a woefully inaccurate projected GeoJSON, done mostly for a friend.
+
 ## Usage
 
 ```{r lib-ex}
@@ -37,6 +41,50 @@ library(imago)
 # current version
 packageVersion("imago")
 
+```
+
+```{r ex-01}
+plot(imago())
+```
+
+```{r ex-02, fig.width = 1300/96, fig.height = 700/96}
+library(hrbrthemes)
+library(countrycode)
+library(tidyverse)
+
+cols(
+  .default = col_double(),
+  date = col_date(format = "")
+) -> covid_cols
+
+read_csv(
+  file = "https://covid.ourworldindata.org/data/who/total_cases.csv",
+  col_types = covid_cols
+) %>% 
+  tail(1) %>%
+  gather(country, cases, -date) %>%
+  filter(!(country %in% c("World", "International", "Saint Barthlemy"))) %>%
+  mutate(iso3c = countrycode(country, "country.name", "iso3c")) %>%
+  select(-date, -country) -> covid_global
+
+left_join(
+  imago(quiet = TRUE, stringsAsFactors = FALSE), 
+  covid_global,
+  by = "iso3c"
+) %>%
+  ggplot() +
+  geom_sf(
+    aes(fill = cases), color = "black", size = 0.25
+  ) +
+  scale_fill_viridis_c(
+    name = "# Cases\n(log10)", na.value = "white",
+    direction = -1, trans = "log10", label = scales::comma
+  ) +
+  coord_sf(datum = NA) +
+  labs(title = sprintf("Covid cases as of %s", Sys.Date())) +
+  theme_ipsum_es(grid="") +
+  theme(legend.key.width = unit(2.5, "lines")) +
+  theme(legend.position = "bottom")
 ```
 
 ## imago Metrics
